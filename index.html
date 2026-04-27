@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunset Chat</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9966, #ff5e62, #f9d423);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-box {
+    width: 90%;
+    max-width: 700px;
+    height: 85vh;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header {
+    padding: 20px;
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#messages {
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+#messages li {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 15px;
+    color: white;
+}
+
+form {
+    display: flex;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+}
+
+input {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 20px;
+    outline: none;
+}
+
+button {
+    margin-left: 10px;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    background: #ff7b54;
+    color: white;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="chat-box">
+    <header>☀ Sunset Chat</header>
+    <ul id="messages"></ul>
+    <form id="form">
+        <input id="input" autocomplete="off" placeholder="Type message..." />
+        <button>Send</button>
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const messages = document.getElementById('messages');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+    }
+});
+
+socket.on('chat message', function(msg) {
+    const item = document.createElement('li');
+    item.textContent = msg;
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
+});
+</script>
+
+</body>
+</html>
