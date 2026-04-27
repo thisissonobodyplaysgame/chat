@@ -8,32 +8,30 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ff9966, #ff5e62, #f9d423);
+    font-family: Arial;
+    background: linear-gradient(135deg,#ff9966,#ff5e62,#f9d423);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.chat-box {
+.chat {
     width: 90%;
     max-width: 700px;
     height: 85vh;
     background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
 header {
     padding: 20px;
     color: white;
-    font-size: 28px;
     text-align: center;
-    font-weight: bold;
+    font-size: 26px;
 }
 
 #messages {
@@ -45,31 +43,30 @@ header {
 }
 
 #messages li {
-    padding: 10px 15px;
+    padding: 10px;
     margin-bottom: 10px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 15px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
     color: white;
 }
 
 form {
     display: flex;
     padding: 15px;
-    background: rgba(255,255,255,0.1);
 }
 
 input {
     flex: 1;
-    border: none;
     padding: 12px;
     border-radius: 20px;
+    border: none;
     outline: none;
 }
 
 button {
     margin-left: 10px;
+    padding: 12px 18px;
     border: none;
-    padding: 12px 20px;
     border-radius: 20px;
     background: #ff7b54;
     color: white;
@@ -77,13 +74,16 @@ button {
 }
 </style>
 </head>
+
 <body>
 
-<div class="chat-box">
+<div class="chat">
     <header>☀ Sunset Chat</header>
+
     <ul id="messages"></ul>
+
     <form id="form">
-        <input id="input" autocomplete="off" placeholder="Type message..." />
+        <input id="input" autocomplete="off" placeholder="Message..." />
         <button>Send</button>
     </form>
 </div>
@@ -91,22 +91,24 @@ button {
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const socket = io();
-const form = document.getElementById('form');
-const input = document.getElementById('input');
-const messages = document.getElementById('messages');
 
-form.addEventListener('submit', function(e) {
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const messages = document.getElementById("messages");
+
+form.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = '';
+
+    if (input.value.trim()) {
+        socket.emit("chat message", input.value);
+        input.value = "";
     }
 });
 
-socket.on('chat message', function(msg) {
-    const item = document.createElement('li');
-    item.textContent = msg;
-    messages.appendChild(item);
+socket.on("chat message", (msg) => {
+    const li = document.createElement("li");
+    li.textContent = msg;
+    messages.appendChild(li);
     messages.scrollTop = messages.scrollHeight;
 });
 </script>
